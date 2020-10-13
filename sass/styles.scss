@@ -1,0 +1,30 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#chart {
+  #chart-line {
+    stroke: blue;
+    stroke-width: 1.5px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
+  #tooltip {
+    width: 54px;
+    height: 2em;
+
+    rect, circle, line {
+      stroke: blue;
+      stroke-width: 1px;
+      fill: white;
+    }
+
+    text {
+      font: 12px sans-serif;
+    }
+  }
+}

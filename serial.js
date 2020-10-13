@@ -5,7 +5,7 @@
 function getDataSample() {
   return {
     date: new Date(),
-    value: Math.sin(((new Date()).getMilliseconds()) * 2 * Math.PI / 1000)
+    value: new Date().getSeconds()
   };
 }
 

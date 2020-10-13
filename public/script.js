@@ -1,7 +1,7 @@
 // Line chart
 const width = 600;
 const height = 300;
-const margin = {top: 10, right: 20, bottom: 30, left: 40};
+const margin = {top: 50, right: 40, bottom: 30, left: 40};
 
 const maxLength = 100;
 
@@ -26,31 +26,79 @@ function draw(svg) {
 		.x(d => xScale(d.date))
 		.y(d => yScale(d.value));
 
-	svg.append('path')
-		.attr('stroke', 'orange')
-		.attr('stroke-width', 1.5)
-		.attr('stroke-linejoin', 'round')
-		.attr('stroke-linecap', 'round')
-		.attr('d', line(data))
-		.attr('fill', 'none');
+	svg.append('path')						// Line
+		.attr('id', 'chart-line')
+		.attr('d', line(data));
 
-	svg.append('g')
+	svg.append('g')								// X-axis
 		.attr('transform', `translate(0, ${height - margin.bottom})`)
 		.call(d3.axisBottom(xScale));
 
-	svg.append('g')
+	svg.append('g')								// Y-axis
 		.attr('transform', `translate(${margin.left}, 0)`)
 		.call(d3.axisLeft(yScale));
+
+	function dataEntryFromMousePosition(x) {
+		let date = xScale.invert(x);
+		let index = d3.bisector(d => d.date).left(data, date);
+		let a = data[index - 1];
+		let b = data[index];
+
+		if (b && (date - a.date > b.date - date)) return b;
+		return a;
+	}
+
+	let tooltip = svg.append('g')
+		.attr('id', 'tooltip');
+	tooltip.append('rect')
+		.attr('width', 54).attr('height', '35px')
+		.attr('x', -27).attr('y', '-45px')
+		.attr('rx', 5).attr('ry', 5);
+	tooltip.append('line')
+		.attr('x0', 0).attr('y0', 0)
+		.attr('x1', 0).attr('y1', -10);
+	tooltip.append('circle')
+		.attr('r', 2);
+	tooltip.append('text').attr('id', 'date-text');
+	tooltip.append('text').attr('id', 'value-text');
+
+	function updateTooltip (g, dataEntry) {
+		if (!dataEntry) return g.style('display', 'none');
+
+		g
+			.style('display', null)
+			.style('pointer-events', 'none')
+			.style('text-anchor', 'middle');
+
+		g.select('text#date-text')
+			.text(d3.timeFormat('%H:%M:%S')(dataEntry.date))
+			.attr('x', 0)
+			.attr('y', '-15px')
+		g.select('text#value-text')
+			.text(dataEntry.value)
+			.attr('x', 0)
+			.attr('y', '-30px');
+	}
+
+	svg.on('touchmove mousemove', event => {
+		const {date, value} = dataEntryFromMousePosition(d3.pointer(event)[0]);
+
+		tooltip
+			.attr('transform', `translate(${xScale(date)}, ${yScale(value)})`)
+			.call(updateTooltip, {date, value});
+	});
+	svg.on('touchleave mouseleave', () => tooltip.call(updateTooltip, null));
 
 	return svg;
 }
 
 window.onload = function() {
-	const svg = d3.select('#chart')
+	const svg = d3.select('body')
 		.append('svg')
+		.attr('id', 'chart')
 		.attr('viewBox', [0, 0, width, height])
-		.attr('width', 600)
-		.attr('height', 300);
+		.attr('width', '900px')
+		.attr('height', '450px');
 
 	draw(svg);
 

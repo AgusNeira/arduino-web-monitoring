@@ -1,7 +1,16 @@
-let arduino = require('./serial.js');
+const path = require('path');
+
+const arduino = require('./serial.js');
 
 const express = require('express');
+const nodeSassMiddleware = require('node-sass-middleware');
 const app = express();
+
+app.use(nodeSassMiddleware({
+  src: path.join(__dirname, 'sass'),
+  dest: path.join(__dirname, 'public'),
+  outputStyle: 'compressed'
+}));
 
 app.use(express.static('public'));
 app.use(express.static('node_modules'));
@@ -20,7 +29,7 @@ io.on('connect', socket => {
 
   interval = setInterval(() => {
     socket.emit('data-sample', arduino.getDataSample());
-  }, 10)
+  }, 1000)
 })
 
 httpServer.listen(3000, () => {
