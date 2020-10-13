@@ -3,7 +3,8 @@ let arduino = require('./serial.js');
 const express = require('express');
 const app = express();
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static('public'));
+app.use(express.static('node_modules'));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -15,12 +16,11 @@ let io = require('socket.io')(httpServer);
 let interval;
 
 io.on('connect', socket => {
-  socket.emit('message', 'connection established');
   console.log('socket.io connection established');
 
   interval = setInterval(() => {
-    socket.emit('message', arduino.getDataSample());
-  }, 1000)
+    socket.emit('data-sample', arduino.getDataSample());
+  }, 10)
 })
 
 httpServer.listen(3000, () => {

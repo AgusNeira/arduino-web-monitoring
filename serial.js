@@ -3,7 +3,10 @@
 // For  now, fake substitute for testing purposes
 
 function getDataSample() {
-  return (Date.now() / 1000) % 60;
+  return {
+    date: new Date(),
+    value: Math.sin(((new Date()).getMilliseconds()) * 2 * Math.PI / 1000)
+  };
 }
 
 module.exports = {getDataSample};
