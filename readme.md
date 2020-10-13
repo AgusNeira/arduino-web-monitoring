@@ -12,13 +12,13 @@ El diseño inicial del programa se divide en tres:
 ## Instalación y ejecución
 
 Este proyecto se está desarrollando con Node.js versión 12.18.3, que se distribuye de forma gratuita en [la página oficial](https://nodejs.org). Una vez instalado, el proceso de instalación del software es:
-'''
+```
 git clone https://github.com/AgusNeira/arduino-web-monitoring.git
 cd arduino-git-monitoring
 npm install
-'''
+```
 
 En el nivel actual de desarrollo no hay un arranque en modo de producción. El modo de desarrollo se ejecuta de la siguiente forma:
-'''
+```
 npm run dev
-'''
+```
