@@ -48,15 +48,17 @@ function draw(svg) {
 		return a;
 	}
 
+	let projections = svg.append('g').attr('id', 'projections');
+	projections.append('line').attr('id', 'horizontal');
+	projections.append('line').attr('id', 'vertical');
+
 	let tooltip = svg.append('g')
 		.attr('id', 'tooltip');
 	tooltip.append('rect')
 		.attr('width', 54).attr('height', '35px')
 		.attr('x', -27).attr('y', '-45px')
 		.attr('rx', 5).attr('ry', 5);
-	tooltip.append('line')
-		.attr('x0', 0).attr('y0', 0)
-		.attr('x1', 0).attr('y1', -10);
+	tooltip.append('line').attr('y1', -10);
 	tooltip.append('circle')
 		.attr('r', 2);
 	tooltip.append('text').attr('id', 'date-text');
@@ -78,6 +80,24 @@ function draw(svg) {
 			.text(dataEntry.value)
 			.attr('x', 0)
 			.attr('y', '-30px');
+
+		g.select('line#horizontal-projection')
+			.attr('x1', -xScale(dataEntry.date));
+
+		g.select('line#vertical-projection')
+			.attr('y1', yScale(dataEntry.value));
+	}
+
+	function updateProjections(g, dataEntry) {
+		if (!dataEntry) return g.style('display', 'none');
+		
+		g.select('line#horizontal')
+			.attr('x1', margin.left).attr('x2', xScale(dataEntry.date))
+			.attr('y1', yScale(dataEntry.value)).attr('y2', yScale(dataEntry.value));
+
+		g.select('line#vertical')
+			.attr('x1', xScale(dataEntry.date)).attr('x2', xScale(dataEntry.date))
+			.attr('y1', height - margin.bottom).attr('y2', yScale(dataEntry.value));
 	}
 
 	svg.on('touchmove mousemove', event => {
@@ -86,8 +106,12 @@ function draw(svg) {
 		tooltip
 			.attr('transform', `translate(${xScale(date)}, ${yScale(value)})`)
 			.call(updateTooltip, {date, value});
+		projections.call(updateProjections, {date, value});
 	});
-	svg.on('touchleave mouseleave', () => tooltip.call(updateTooltip, null));
+	svg.on('touchleave mouseleave', () => {
+		tooltip.call(updateTooltip, null);
+		projections.call(updateProjections, null);
+	});
 
 	return svg;
 }
@@ -97,8 +121,8 @@ window.onload = function() {
 		.append('svg')
 		.attr('id', 'chart')
 		.attr('viewBox', [0, 0, width, height])
-		.attr('width', '900px')
-		.attr('height', '450px');
+		.attr('width', 900)
+		.attr('height', 450);
 
 	draw(svg);
 
