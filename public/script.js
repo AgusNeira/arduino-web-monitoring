@@ -39,6 +39,8 @@ function draw(svg) {
 		.call(d3.axisLeft(yScale));
 
 	function dataEntryFromMousePosition(x) {
+		if (x < margin.left) return null;
+
 		let date = xScale.invert(x);
 		let index = d3.bisector(d => d.date).left(data, date);
 		let a = data[index - 1];
@@ -101,7 +103,9 @@ function draw(svg) {
 	}
 
 	svg.on('touchmove mousemove', event => {
-		const {date, value} = dataEntryFromMousePosition(d3.pointer(event)[0]);
+		const dataEntry = dataEntryFromMousePosition(d3.pointer(event)[0]);
+		if (!dataEntry) return;
+		const {date, value} = dataEntry;
 
 		tooltip
 			.attr('transform', `translate(${xScale(date)}, ${yScale(value)})`)
@@ -123,7 +127,7 @@ window.onload = function() {
 		.attr('viewBox', [0, 0, width, height])
 		.attr('width', 900)
 		.attr('height', 450);
-
+		
 	draw(svg);
 
 	// Socket.IO connection
@@ -140,13 +144,13 @@ window.onload = function() {
 	})
 
 	socket.on('data-sample', sample => {
+		let value = parseInt(sample.split(';')[0].split(':')[1])
 		data.push({
-			date: new Date(Date.parse(sample.date)),
-			value: sample.value
+			date: new Date(),
+			value: value
 		});
 		if (data.length > 100) data.shift();
 
-		console.log('I\'m trying to update...');
 		draw(svg);
 	})
 };
