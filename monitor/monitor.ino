@@ -24,7 +24,7 @@ void setup() {
 }
 
 void loop() {
-	float angle = incremental++ * 2 * 3.14 / 1024;
+	float angle = incremental++ * 2 * 3.14 / 128;
   if (incremental == 1024) incremental = 0;
 
   values[0] = incremental;
@@ -32,10 +32,9 @@ void loop() {
   values[2] = (int) (cos(angle) * 512 + 512);
   values[3] = random(0, 1024);
 
-  snprintf(message, 36, "%d:%d;%d:%d;%d:%d;%d:%d",
-          pins[0], values[0], pins[1], values[1],
-          pins[2], values[2], pins[3], values[3]);
+  snprintf(message, 36, "%d;%d;%d;%d",
+          values[0], values[1], values[2], values[3]);
   Serial.println(message);
 
-  delay(500);
+  delay(250);
 }
