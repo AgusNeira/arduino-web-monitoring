@@ -3,24 +3,22 @@ int pins[4] = {A0, A1, A2, A3};
 int values[4] = {0, 0, 0, 0};
 
 /*  
- *  largo del mensaje: "NNN:XXXX;NNN:XXXX;NNN:XXXX;NNN:XXXX"
- *                      3 * 4 caracteres para número de PIN (A0 - A15)
+ *  largo del mensaje: "XXXX;XXXX;XXXX;XXXX"
  *                      4 * 4 caracteres para valor de PIN (0 - 1023)
  *                      7 delimitadores
  *                      1 retorno de línea '\n'
- *                      36 caracteres
+ *                      24 caracteres
  */
-char message[36];
+char message[24];
 
 void setup() {
-	// put your setup code here, to run once:
 	Serial.begin(9600);
 
 	while (!Serial) {
 		delay(10);
 		Serial.begin(9600);
 	}
-  randomSeed(15);
+    randomSeed(15);
 }
 
 void loop() {

@@ -14,7 +14,6 @@ window.onload = function () {
 	socket.on('data-sample', sample => {
 		let now = new Date();
 		let values = sample.split(';').map(str => parseInt(str));
-		console.log(sample,values);
 		if (values.length !== 4) console.log('ERROR');
 
 		charts.forEach((chart, index) => chart.pushSample({date: now, value: values[index]}));

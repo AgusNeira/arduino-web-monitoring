@@ -1,14 +1,19 @@
 const path = require('path');
 
+const SERIALPORT = process.argv[2] || 'COM3';
+const SERVER_PORT = process.argv[3] || 3000;
+
+// Serial port configuration
 const SerialPort = require('serialport');
 const ReadLine = require('@serialport/parser-readline');
-const port = new SerialPort('COM3', { baudRate: 9600 }, err => {
+const port = new SerialPort(SERIALPORT, { baudRate: 9600 }, err => {
 	if (err)
-		console.log('Couldn\'t connect to serialport COM3: ', err.message);
-	else console.log('Successfully connected to COM3');
+		console.log(`No se pudo conectar a ${SERIALPORT}:`, err.message);
+	else console.log(`Conexión serial establecida en ${SERIALPORT}`);
 });
 const parser = port.pipe(new ReadLine());
 
+// Server configuration
 const express = require('express');
 const nodeSassMiddleware = require('node-sass-middleware');
 const app = express();
@@ -20,24 +25,20 @@ app.use(nodeSassMiddleware({
 	outputStyle: 'compressed'
 }));
 
-// Static file serving
+// Provee archivos de forma estática de las carpetas listada abajo
 app.use(express.static('public'));
 app.use(express.static('node_modules'));
 
-// Main route
-app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/index.html');
-})
 
 const httpServer = require('http').createServer(app);
 let io = require('socket.io')(httpServer);
 
-httpServer.listen(3000, () => console.log('Server listening on port 3000'));
+httpServer.listen(SERVER_PORT, () => console.log(`Servidor escuchando en localhost:${SERVER_PORT}`));
+
 io.on('connect', socket => {
-	console.log('socket.io connection established');
+	console.log('Conexión de sockets establecido');
 
 	parser.on('data', data => {
-		console.log(data);
 		socket.emit('data-sample', data);
 	});
 });
