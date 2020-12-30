@@ -19,17 +19,22 @@ const parser = port.pipe(new ReadLine());
 
 // Server configuration
 const express = require('express');
-const nodeSassMiddleware = require('node-sass-middleware');
 const app = express();
+app.set('view engine', 'pug');
 
 // SASS configuration
+const nodeSassMiddleware = require('node-sass-middleware');
 app.use(nodeSassMiddleware({
 	src: path.join(__dirname, 'sass'),
 	dest: path.join(__dirname, 'public'),
 	outputStyle: 'compressed'
 }));
 
-// Provee archivos de forma estática de las carpetas listada abajo
+// Routes
+let routes = require('./routes.js');
+app.use(routes);
+
+// Provee archivos de forma estática de las carpetas listadas abajo
 app.use(express.static('public'));
 app.use(express.static('node_modules'));
 

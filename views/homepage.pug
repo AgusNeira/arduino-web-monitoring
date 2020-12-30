@@ -1,0 +1,12 @@
+html(lang='es')
+	include _head.pug
+
+	body
+		h1 Monitor de variables de Arduino
+
+		form(action='/monitor' method='GET')
+			label(for='port') Puerto:
+			select(name='port' id='port')
+				each port in devices
+					option(value=port.path) #{port.path}
+			input(type='submit' value='Monitorear')
