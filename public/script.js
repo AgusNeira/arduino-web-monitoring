@@ -1,4 +1,4 @@
-/*
+
 window.onload = function () {
 	let charts = [];
 	for (let i = 0; i < 4; i++) {
@@ -19,14 +19,4 @@ window.onload = function () {
 
 		charts.forEach((chart, index) => chart.pushSample({date: now, value: values[index]}));
 	})
-}*/
-// The charts interface will now only be displayed after the port is selected
-
-window.onload = function () {
-	const socket = io();
-	socket.on('connect', () => {
-		console.log('Successfully connected to server through socket');
-	});
-
-	socket.on('devices', console.log);
 }
