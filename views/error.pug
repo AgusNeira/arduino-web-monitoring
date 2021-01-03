@@ -1,0 +1,9 @@
+html(lang='es')
+	include _head.pug
+
+	body
+		include _header.pug
+
+		.error
+			h2 #{err.name}
+			p #{err.message}
