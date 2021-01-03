@@ -11,14 +11,19 @@ module.exports = io => {
 		res.render('homepage', { devices });
 	})
 
-	router.get('/monitor/:port', async (req, res) => {
+	router.get('/monitor', async (req, res) => {
 		const devices = await SerialPort.list();
 		res.render('monitor', { devices });
 
-		connectionsPool.connect(req.params.port, async (err, port) => {
+		if (!'port' in req.query) {
+			res.render('error', { err: new Error('Port name not specified in query')});
+			return
+		}
+
+		connectionsPool.connect(req.query.port, async (err, port) => {
 			if (err) {
 				res.render('error', { err });
-				console.log(`Error connecting to ${req.params.port}`, err);
+				console.log(`Error connecting to ${req.query.port}`, err);
 				return;
 			}
 
