@@ -15,15 +15,16 @@ app.use(nodeSassMiddleware({
 	outputStyle: 'compressed'
 }));
 
+const httpServer = require('http').createServer(app);
+const io = require('socket.io')(httpServer);
+
 // Routes
-let routes = require('./routes.js');
+let routes = require('./routes.js')(io);
 app.use(routes);
 
 // Provee archivos de forma estática de las carpetas listadas abajo
 app.use(express.static('public'));
 app.use(express.static('node_modules'));
-
-const httpServer = require('http').createServer(app);
 
 httpServer.listen(SERVER_PORT, () => {
 	console.log(`Servidor escuchando en localhost:${SERVER_PORT}`)
