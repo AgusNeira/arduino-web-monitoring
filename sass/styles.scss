@@ -6,6 +6,11 @@
 	font-family: sans-serif;
 }
 
+a {
+	color: white;
+	text-decoration: none;
+}
+
 header {
 	display: flex;
 	justify-content: space-between;
@@ -20,17 +25,17 @@ header {
 		font-family: sans-serif;
 	}
 
-	.port-button {
-		background-color: #363636;
-		padding: 0.8em;
-		border-radius: 0.5em;
-		color: white;
-		text-decoration: none;
+	.devices-found {
+		.port-button {
+			background-color: #363636;
+			padding: 0.8em;
+			border-radius: 0.5em;
 
-		transition: 0.15s all;
-		&:hover {
-			transform: scale(1.1);
-			background-color: #484848;
+			transition: 0.15s all;
+			&:hover {
+				transform: scale(1.1);
+				background-color: #484848;
+			}
 		}
 	}
 }
@@ -76,10 +81,12 @@ header {
 	}
 }
 
-.error {
-	margin-top: 100px;
+.error, .content {
+	max-width: 400px;
+	margin: 100px auto 0 auto;
 	h2 {
 		text-align: center;
+		margin-bottom: 20px;
 	}
 	p {
 		text-align: center;

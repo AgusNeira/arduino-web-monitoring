@@ -1,5 +1,7 @@
 header
-	h1 Monitor de Arduino
+	h1 
+		a(href='/') Monitor de Arduino
 
-	each port in devices
-		a(href=`/monitor?port=${port.path}` class='port-button') #{port.path}
+	.devices-found
+		each port in devices
+			a(href=`/monitor?port=${port.path}` class='port-button') #{port.path}

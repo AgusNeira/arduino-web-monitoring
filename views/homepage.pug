@@ -3,3 +3,14 @@ html(lang='es')
 
 	body
 		include _header.pug
+
+		.content
+			if devices.length === 0
+				h2 No se han encontrado dispositivos
+				p Conecte su dispositivo en un puerto USB y recargue la página
+			else if devices.length === 1
+				h2 Se ha encontrado 1 dispositivo
+				p Selecciónelo en la cabecera para monitorearlo. Si este no es el dispositivo que busca, revise la conexión y recargue la página
+			else
+				h2 Se han encontrado #{devices.length} dispositivos
+				p Seleccione al que desea monitorear desde la cabecera.
